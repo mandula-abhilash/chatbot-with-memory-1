@@ -1,7 +1,8 @@
-import { ChatOpenAI } from "langchain/chat_models/openai";
-import { ConversationChain } from "langchain/chains";
-import { BufferMemory } from "langchain/memory";
-import { RedisChatMessageHistory } from "langchain/stores/message/redis";
+import { ChatOpenAI } from "@langchain/openai";
+import { LLMChain } from "@langchain/core/chains";
+import { ConversationPromptTemplate } from "@langchain/core/prompts";
+import { BufferMemory } from "@langchain/community/memory/buffer";
+import { RedisChatMessageHistory } from "@langchain/community/stores/message/redis";
 import { redis } from "../config/redis.js";
 import { pool } from "../config/database.js";
 import dotenv from "dotenv";
@@ -33,8 +34,20 @@ export class ChatService {
       memoryKey: "chat_history",
     });
 
-    return new ConversationChain({
+    // Create a conversation prompt template
+    const prompt = ConversationPromptTemplate.fromTemplate(`
+      The following is a friendly conversation between a human and an AI.
+      
+      Current conversation:
+      {chat_history}
+      Human: {input}
+      AI:
+    `);
+
+    // Create LLMChain instead of ConversationChain
+    return new LLMChain({
       llm: this.model,
+      prompt: prompt,
       memory: memory,
     });
   }
@@ -42,7 +55,7 @@ export class ChatService {
   async processMessage(sessionId, message) {
     const chain = await this.createConversationChain(sessionId);
     const response = await chain.call({ input: message });
-    return response.response;
+    return response.text;
   }
 
   async saveSession(sessionId) {
