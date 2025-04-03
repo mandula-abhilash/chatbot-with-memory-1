@@ -20,4 +20,9 @@ services:
       - ./fastapi/.env
     volumes:
       - ./fastapi:/app
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+      - /app/venv
+    command: >
+      sh -c "python -m venv venv &&
+             . venv/bin/activate &&
+             pip install -r requirements.txt &&
+             uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
