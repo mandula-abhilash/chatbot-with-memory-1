@@ -18,16 +18,17 @@ export const ChatMessage = ({ message, isUser }) => {
           {isUser ? <User className="h-5 w-5" /> : <Bot className="h-5 w-5" />}
         </div>
         <div
-          className={`flex-1 space-y-2 overflow-hidden ${
+          className={`flex-1 space-y-2 overflow-visible ${
             isUser ? "text-right" : ""
           }`}
         >
           <div
-            className={`inline-block max-w-[85%] rounded-2xl px-4 py-2.5 text-base shadow-sm ${
+            className={`inline-block max-w-[85%] rounded-2xl px-4 py-3 text-base shadow-sm ${
               isUser
                 ? "bg-gray-900 text-white dark:bg-gray-700"
                 : "bg-white text-gray-900 dark:bg-gray-800 dark:text-white"
             }`}
+            style={{ wordBreak: "break-word" }}
           >
             {message}
           </div>
