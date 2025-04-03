@@ -25,10 +25,10 @@ export const processMessage = async (sessionId, message) => {
 
 export const saveSession = async (sessionId) => {
   try {
-    await axiosInstance.post("/chat/save", {
+    const response = await axiosInstance.post("/chat/save", {
       session_id: sessionId,
     });
-    return true;
+    return response.data.success;
   } catch (error) {
     if (error.response) {
       throw new Error(error.response.data.detail || "Error saving session");

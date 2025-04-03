@@ -5,6 +5,7 @@ from langchain.memory import ConversationBufferMemory
 from langchain_community.chat_message_histories import RedisChatMessageHistory
 from uuid import uuid4
 from ..core.config import settings
+from ..core.database import get_db_connection
 import json
 
 class ChatService:
@@ -60,18 +61,22 @@ class ChatService:
             key_prefix=settings.REDIS_SESSION_SECRET_KEY
         )
 
-        messages = await history.get_messages()
+        messages = history.messages
         
         conn = get_db_connection()
         try:
             with conn.cursor() as cur:
                 cur.execute(
                     "INSERT INTO chat_sessions (session_id, messages) VALUES (%s, %s)",
-                    (session_id, json.dumps([msg.dict() for msg in messages]))
+                    (session_id, json.dumps([{
+                        "type": msg.type,
+                        "content": msg.content,
+                        "additional_kwargs": msg.additional_kwargs
+                    } for msg in messages]))
                 )
                 conn.commit()
             
-            await history.clear()
+            history.clear() 
             return True
         finally:
             conn.close()
