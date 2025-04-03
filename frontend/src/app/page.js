@@ -9,9 +9,12 @@ const Home = () => {
   const [messages, setMessages] = useState([]);
   const [sessionId, setSessionId] = useState(null);
   const messagesEndRef = useRef(null);
+  const chatContainerRef = useRef(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   useEffect(() => {
@@ -24,7 +27,6 @@ const Home = () => {
     try {
       const data = await chatService.sendMessage(message, sessionId);
 
-      // Update session ID if it's a new conversation
       if (!sessionId && data.session_id) {
         setSessionId(data.session_id);
       }
@@ -52,33 +54,35 @@ const Home = () => {
         </div>
       </header>
 
-      <main className="flex-1 container max-w-4xl mx-auto py-4 px-4">
-        <div className="relative flex flex-col h-[calc(100vh-10rem)]">
-          <div className="flex-1 overflow-y-auto space-y-6">
-            {messages.length === 0 ? (
-              <div className="flex h-full items-center justify-center">
-                <div className="text-center space-y-3">
-                  <div className="text-4xl">👋</div>
-                  <p className="text-lg text-gray-500 dark:text-gray-400">
-                    Start a conversation with your AI assistant
-                  </p>
+      <main className="flex-1 container max-w-4xl mx-auto flex flex-col">
+        <div className="flex flex-col h-[calc(100vh-8rem)]">
+          <div className="flex-1 overflow-y-auto">
+            <div className="min-h-full flex flex-col justify-end py-4 px-4">
+              {messages.length === 0 ? (
+                <div className="flex-1 flex items-center justify-center">
+                  <div className="text-center space-y-3">
+                    <div className="text-4xl">👋</div>
+                    <p className="text-lg text-gray-500 dark:text-gray-400">
+                      Start a conversation with your AI assistant
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <>
-                {messages.map((msg, index) => (
-                  <ChatMessage
-                    key={index}
-                    message={msg.text}
-                    isUser={msg.isUser}
-                  />
-                ))}
-                <div ref={messagesEndRef} />
-              </>
-            )}
+              ) : (
+                <div className="space-y-6">
+                  {messages.map((msg, index) => (
+                    <ChatMessage
+                      key={index}
+                      message={msg.text}
+                      isUser={msg.isUser}
+                    />
+                  ))}
+                  <div ref={messagesEndRef} />
+                </div>
+              )}
+            </div>
           </div>
 
-          <div className="sticky bottom-0 border-t bg-white p-4 dark:bg-gray-900 dark:border-gray-800">
+          <div className="border-t bg-white p-4 dark:bg-gray-900 dark:border-gray-800">
             <div className="max-w-3xl mx-auto">
               <ChatInput onSendMessage={handleSendMessage} />
             </div>
