@@ -9,7 +9,7 @@ services:
       - ./backend/.env
     volumes:
       - ./backend:/app
-    command: npm run dev
+    command: npm run prod:server
 
   fastapi:
     build:
@@ -26,3 +26,14 @@ services:
              . venv/bin/activate &&
              pip install -r requirements.txt &&
              uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: npm run dev
