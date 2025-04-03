@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { ChatMessage } from "@/components/chat/ChatMessage";
 import { ChatInput } from "@/components/chat/ChatInput";
+import { chatService } from "@/services/chatService";
 
 const Home = () => {
   const [messages, setMessages] = useState([]);
@@ -21,18 +22,7 @@ const Home = () => {
     setMessages((prev) => [...prev, { text: message, isUser: true }]);
 
     try {
-      const response = await fetch("http://localhost:5000/api/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          message,
-          session_id: sessionId,
-        }),
-      });
-
-      const data = await response.json();
+      const data = await chatService.sendMessage(message, sessionId);
 
       // Update session ID if it's a new conversation
       if (!sessionId && data.session_id) {
