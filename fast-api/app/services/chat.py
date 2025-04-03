@@ -2,7 +2,7 @@ from langchain_openai import ChatOpenAI
 from langchain.chains import LLMChain
 from langchain.prompts import ChatPromptTemplate
 from langchain.memory import ConversationBufferMemory
-from langchain_community.memory import RedisChatMessageHistory
+from langchain_community.chat_message_histories import RedisChatMessageHistory
 from uuid import uuid4
 from ..core.config import settings
 from ..core.database import get_db_connection
