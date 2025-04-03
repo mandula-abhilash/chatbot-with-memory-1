@@ -10,10 +10,12 @@ export const metadata = {
   description: "An intelligent chat assistant powered by AI",
 };
 
-export default function RootLayout({ children }) {
+const RootLayout = ({ children }) => {
   return (
     <html lang="en">
       <body className={geist.className}>{children}</body>
     </html>
   );
-}
+};
+
+export default RootLayout;
