@@ -31,13 +31,13 @@ class ChatService:
         )
 
         prompt = ChatPromptTemplate.from_template("""
-            The following is a friendly conversation between a human and an AI.
+            The following is a friendly conversation between a human and an AI assistant.
+            The AI assistant provides direct responses without prefixing them with 'AI:'.
             
             Current conversation:
             {chat_history}
             Human: {input}
-            AI:
-        """)
+            Assistant:""")
 
         return LLMChain(
             llm=self.model,
@@ -51,7 +51,7 @@ class ChatService:
             
         chain = self.create_conversation_chain(session_id)
         response = await chain.ainvoke({"input": message})
-        return session_id, response["text"]
+        return session_id, response["text"].strip()
 
     async def save_session(self, session_id: str) -> bool:
         redis_url = f"redis://{settings.REDIS_USERNAME}:{settings.REDIS_PASSWORD}@{settings.REDIS_HOST}:{settings.REDIS_PORT}"
