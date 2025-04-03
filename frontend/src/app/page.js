@@ -6,6 +6,7 @@ import { ChatInput } from "@/components/chat/ChatInput";
 
 const Home = () => {
   const [messages, setMessages] = useState([]);
+  const [sessionId, setSessionId] = useState(null);
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -25,10 +26,19 @@ const Home = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ message }),
+        body: JSON.stringify({
+          message,
+          session_id: sessionId,
+        }),
       });
 
       const data = await response.json();
+
+      // Update session ID if it's a new conversation
+      if (!sessionId && data.session_id) {
+        setSessionId(data.session_id);
+      }
+
       setMessages((prev) => [...prev, { text: data.response, isUser: false }]);
     } catch (error) {
       console.error("Error sending message:", error);
