@@ -5,10 +5,7 @@ from langchain.memory import ConversationBufferMemory
 from langchain_community.chat_message_histories import RedisChatMessageHistory
 from uuid import uuid4
 from ..core.config import settings
-from ..core.database import get_db_connection
 import json
-
-SESSION_TTL = 3600  # 1 hour
 
 class ChatService:
     def __init__(self):
@@ -19,10 +16,10 @@ class ChatService:
         )
 
     def create_conversation_chain(self, session_id: str):
+        redis_url = f"redis://{settings.REDIS_USERNAME}:{settings.REDIS_PASSWORD}@{settings.REDIS_HOST}:{settings.REDIS_PORT}"
         history = RedisChatMessageHistory(
             session_id=session_id,
-            session_ttl=SESSION_TTL,
-            url=f"redis://{settings.REDIS_USERNAME}:{settings.REDIS_PASSWORD}@{settings.REDIS_HOST}:{settings.REDIS_PORT}",
+            url=redis_url,
             key_prefix=settings.REDIS_SESSION_SECRET_KEY
         )
 
@@ -56,9 +53,10 @@ class ChatService:
         return session_id, response["text"]
 
     async def save_session(self, session_id: str) -> bool:
+        redis_url = f"redis://{settings.REDIS_USERNAME}:{settings.REDIS_PASSWORD}@{settings.REDIS_HOST}:{settings.REDIS_PORT}"
         history = RedisChatMessageHistory(
             session_id=session_id,
-            url=f"redis://{settings.REDIS_USERNAME}:{settings.REDIS_PASSWORD}@{settings.REDIS_HOST}:{settings.REDIS_PORT}",
+            url=redis_url,
             key_prefix=settings.REDIS_SESSION_SECRET_KEY
         )
 
