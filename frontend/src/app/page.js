@@ -58,7 +58,7 @@ const Home = () => {
       </header>
 
       <main className="flex-1 container max-w-4xl mx-auto py-4 px-4">
-        <div className="relative flex flex-col h-[calc(100vh-10rem)]">
+        <div className="relative flex flex-col h-[calc(100vh-8rem)]">
           <div className="flex-1 overflow-y-auto space-y-6">
             {messages.length === 0 ? (
               <div className="flex h-full items-center justify-center">
