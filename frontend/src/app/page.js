@@ -1,9 +1,9 @@
 "use client";
 
-import { Bot } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { ChatMessage } from "@/components/chat/ChatMessage";
 import { ChatInput } from "@/components/chat/ChatInput";
+import { Bot } from "lucide-react";
 import { chatService } from "@/services/chatService";
 
 const Home = () => {
@@ -13,9 +13,7 @@ const Home = () => {
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
@@ -59,62 +57,47 @@ const Home = () => {
         </div>
       </header>
 
-      <main className="flex-1 container max-w-4xl mx-auto flex flex-col">
-        <div className="flex flex-col h-[calc(100vh-8rem)]">
-          <div className="flex-1 overflow-y-auto">
-            <div className="min-h-full flex flex-col justify-end py-4 px-4">
-              {messages.length === 0 ? (
-                <div className="flex-1 flex items-center justify-center">
-                  <div className="text-center space-y-3">
-                    <div className="text-4xl">👋</div>
-                    <p className="text-lg text-gray-500 dark:text-gray-400">
-                      Start a conversation with your AI assistant
-                    </p>
-                  </div>
+      <main className="flex-1 container max-w-4xl mx-auto py-4 px-4">
+        <div className="relative flex flex-col h-[calc(100vh-10rem)]">
+          <div className="flex-1 overflow-y-auto space-y-6">
+            {messages.length === 0 ? (
+              <div className="flex h-full items-center justify-center">
+                <div className="text-center space-y-3">
+                  <div className="text-4xl">👋</div>
+                  <p className="text-lg text-gray-500 dark:text-gray-400">
+                    Start a conversation with your AI assistant
+                  </p>
                 </div>
-              ) : (
-                <div className="space-y-6">
-                  {messages.map((msg, index) => (
-                    <ChatMessage
-                      key={index}
-                      message={msg.text}
-                      isUser={msg.isUser}
-                    />
-                  ))}
-                  {isTyping && (
-                    <div className="max-w-3xl mx-auto">
-                      <div className="group flex items-start gap-4">
-                        <div className="flex h-9 w-9 shrink-0 select-none items-center justify-center rounded-full border shadow-sm bg-white text-gray-900 dark:bg-gray-800 dark:text-white">
-                          <Bot className="h-5 w-5" />
-                        </div>
-                        <div className="flex-1 space-y-2 overflow-hidden">
-                          <div className="inline-block max-w-[85%] rounded-2xl px-4 py-2.5 text-base shadow-sm bg-white text-gray-900 dark:bg-gray-800 dark:text-white">
-                            <div className="flex items-center gap-1">
-                              <span
-                                className="w-1 h-1 bg-current rounded-full animate-bounce"
-                                style={{ animationDelay: "0s" }}
-                              ></span>
-                              <span
-                                className="w-1 h-1 bg-current rounded-full animate-bounce"
-                                style={{ animationDelay: "0.2s" }}
-                              ></span>
-                              <span
-                                className="w-1 h-1 bg-current rounded-full animate-bounce"
-                                style={{ animationDelay: "0.4s" }}
-                              ></span>
-                            </div>
-                          </div>
-                        </div>
+              </div>
+            ) : (
+              <>
+                {messages.map((msg, index) => (
+                  <ChatMessage
+                    key={index}
+                    message={msg.text}
+                    isUser={msg.isUser}
+                  />
+                ))}
+                {isTyping && (
+                  <div className="max-w-3xl mx-auto">
+                    <div className="group flex items-center gap-4">
+                      <div className="flex h-9 w-9 shrink-0 select-none items-center justify-center rounded-full border shadow-sm bg-white text-gray-900 dark:bg-gray-800 dark:text-white">
+                        <Bot className="h-5 w-5 shrink-0" />
+                      </div>
+                      <div className="flex h-9 items-center gap-1 text-gray-900 dark:text-white">
+                        <span className="w-2 h-2 bg-current rounded-full animate-pulse"></span>
+                        <span className="w-2 h-2 bg-current rounded-full animate-pulse [animation-delay:0.2s]"></span>
+                        <span className="w-2 h-2 bg-current rounded-full animate-pulse [animation-delay:0.4s]"></span>
                       </div>
                     </div>
-                  )}
-                  <div ref={messagesEndRef} />
-                </div>
-              )}
-            </div>
+                  </div>
+                )}
+                <div ref={messagesEndRef} />
+              </>
+            )}
           </div>
 
-          <div className="border-t bg-white p-4 dark:bg-gray-900 dark:border-gray-800">
+          <div className="sticky bottom-0 border-t bg-white p-4 dark:bg-gray-900 dark:border-gray-800">
             <div className="max-w-3xl mx-auto">
               <ChatInput onSendMessage={handleSendMessage} />
             </div>

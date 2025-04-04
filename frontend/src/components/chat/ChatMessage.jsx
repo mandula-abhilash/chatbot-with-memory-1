@@ -4,7 +4,7 @@ export const ChatMessage = ({ message, isUser }) => {
   return (
     <div className="max-w-3xl mx-auto">
       <div
-        className={`group flex items-start gap-4 ${
+        className={`group flex items-center gap-4 ${
           isUser ? "flex-row-reverse" : ""
         }`}
       >
@@ -15,7 +15,11 @@ export const ChatMessage = ({ message, isUser }) => {
               : "bg-white text-gray-900 dark:bg-gray-800 dark:text-white"
           }`}
         >
-          {isUser ? <User className="h-5 w-5" /> : <Bot className="h-5 w-5" />}
+          {isUser ? (
+            <User className="h-5 w-5 shrink-0" />
+          ) : (
+            <Bot className="h-5 w-5 shrink-0" />
+          )}
         </div>
         <div
           className={`flex-1 space-y-2 overflow-visible ${
