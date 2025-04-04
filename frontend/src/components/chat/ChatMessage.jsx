@@ -1,4 +1,4 @@
-import { User, Bot } from "lucide-react";
+import { User, Bot, User2 } from "lucide-react";
 
 export const ChatMessage = ({ message, isUser }) => {
   return (
@@ -11,12 +11,12 @@ export const ChatMessage = ({ message, isUser }) => {
         <div
           className={`flex h-9 w-9 shrink-0 select-none items-center justify-center rounded-full border shadow-sm ${
             isUser
-              ? "bg-gray-900 text-white dark:bg-gray-700"
+              ? "bg-gray-900 text-white dark:bg-gray-700 border border-gray-900"
               : "bg-white text-gray-900 dark:bg-gray-800 dark:text-white"
           }`}
         >
           {isUser ? (
-            <User className="h-5 w-5 shrink-0" />
+            <User2 className="h-5 w-5 shrink-0" />
           ) : (
             <Bot className="h-5 w-5 shrink-0" />
           )}
